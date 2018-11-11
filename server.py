@@ -10,20 +10,20 @@ app.config['SECRET_KEY']='thisissupposedtobesecret'
 
 db=SQLAlchemy(app)
 
-class admin(db.Mode):
+class Admin(db.Mode):
 	__tablename__="admin"
 	id=db.Column(db.Integer, primary_key=True)
 	admin=db.Column(db.String(10))
 	password=db.Column(db.String(10))
 
-class peneliti(db.Model):
+class Peneliti(db.Model):
 	__tablename__="peneliti"
 	id=db.Column(db.Integer, primary_key=True)
 	username=db.Column(db.String(50))
 	email=db.Column(db.String(50))
 	password=db.Column(db.String(50))
 	universitas=db.Column(db.String(50))
-	minat=db.Column(db.String(50))
+	kategori_penelitian=db.Column(db.String(50))
 	jenis_kelamin=db.Column(db.Text)
 
 	def __init__(self, username, email, password, universitas,
@@ -38,6 +38,11 @@ class peneliti(db.Model):
         self.authenticated = False
         self.confirmed = False
    
+    def address(self, address):
+    	self.address=address
+    def 
+
+
     def is_authenticated(self):
         return True
 
@@ -57,7 +62,7 @@ class peneliti(db.Model):
         return str(self.user_id)
 
     def generate_password(self , password):
-        self.password = generate_password_hash(password)
+        self.password = generate_password_hash(password, methods='sha256')
 
     def check_password(self , password):
         return check_password_hash(self.password , password)
@@ -66,13 +71,13 @@ class peneliti(db.Model):
         return "<User %r>"% (self.nama)
 
 
-class petani(db.Model):
+class Petani(db.Model):
 	__tablename__="petani"
 	id=db.Column(db.Integer, primary_key=True)
 	username=db.Column(db.String(50))
 	email=db.Column(db.String(50))
 	password=db.Column(db.String(50))
-	Address=db.Column(db.String(50))
+	address=db.Column(db.String(50))
 	kategori_petani=db.Column(db.String(50))
 	jenis_kelamin=db.Column(db.Text)
 
@@ -115,7 +120,7 @@ class petani(db.Model):
     def __repr__(self):
         return "<User %r>"% (self.nama)
 
-class upload_data(db.Model):
+class Upload_data(db.Model):
 	__upload_data__="upload_data"
 	id=db.Column(db.Integer, primary_key=True)
 	gambar = db.Column(db.Text)
@@ -124,7 +129,8 @@ class upload_data(db.Model):
 ###################### Admin Area, Don't Disturbe. so many secret things a ################
 ###########################################################################################
 
-@app.route("/admin/login")
+@app.route("/login/admin")
+login_required(admin)
 def login_admin():
 	return render_template ('login_admin.html', admin=admin)
 
@@ -143,19 +149,19 @@ def login_admin():
 
 
 @app.route("/login/peneliti", methods=["GET","POST"])
+login_required(peneliti)
 def login():
     if request.method="POST":
     	email=request.form["username"]
     	password=request.form["password"]
     	user=peneliti.query.filter_by(email=email).first()
-    	if user and check_password_hash(user.email, user.)
-
-
-        return redirect(url_for("dashboard_login_peneliti"))
-    return render_template("login_peneliti.html", title="Login")
+    	if user and user.check_password(password):
+    		return redirect(url_for("page_market_place"))
+    return render_template("login_peneliti.html", title="Peneliti Login")
 
 
 @app.route("/login/petani", methods=["GET","POST"])
+login_required(petani)
 def login():
     if request.method="POST":
     	email=request.form["username"]
@@ -165,42 +171,62 @@ def login():
     	user=petani.query.filter_by(email=email).first()
     	if user and petani.check_password(password):
     		return redirect(url_for("dashboard_login_petani"))
-    return render_template("login_petani.html", title="Login")
+    return render_template("login_petani.html", title="Petani Login")
+
+
+
+############## Dashboard Petani #######################
+
+@app.route('/dashboard_login_petani')
+def dashboard_login_petani():
+	if current_user.role='user':
+		return render_template('dashboard_login_petani.html', controller='controller for petani')
+
+@app.route('/page_market_place')
+def page_market_place():
+	if current_user.role='user':
+		return render_template ('page_market_place.html')
+
 
 
 
 ################################# Register Area ##################################
 
+
+################################# REGISTER PENELITI ###############################
+
 @app.route("/register/peneliti", methods=["GET", "POST"])
-def register():
+def register_peneliti():
 
     if request.method == "POST":
         username = request.form["nama"]
         email = request.form["email"]
         password = request.form["password"]
-        universitas=request.form.get("universitas")
-        minat=request.form.get('minat')
-        if not User.query.filter_by(email=email).first():
+        universitas=request.form["universitas"]
+        kategori_penelitian=request.form['kategori_penelitian']
+        jenis_kelamin = request.form.get("jenis_kelamin")
+        if not Penelti.query.filter_by(email=email).first():
 
-            user = User(nama=nama, email=email, alamat=alamat, sekolah=nama_sekolah,
-                        jenis_kelamin=jenis_kelamin, kategori=kategori,
-                        kab_kota=kab_kota, provinsi=provinsi, password=password)
+            user = Peneliti(nama=nama, email=email, kategori_penelitian=kategori_penelitian, 
+            			universitas=universitas,
+                        jenis_kelamin=jenis_kelamin, 
+                         password=password)
 
             db.session.add(user)
             db.session.commit()
-            return render_template("register_success.html", nama=nama, title="Registrasi Berhasil!")
+            return render_template("register_peneliti_success.html", nama=nama, title="Registrasi Berhasil!")
 
         else:
-            return render_template("register.html", msg="email sudah terdaftar")
+            return render_template("register_peneliti.html", msg="petani sudah terdaftar")
 
     return render_template("register.html", title="Registrasi")
 
 
 
-######################	PETANI 		############################################### 
+######################	REGISTRAI PETANI 		############################################### 
 
 @app.route("/register/petani", methods=["GET", "POST"])
-def register():
+def register_petani():
 
     if request.method == "POST":
         username = request.form["nama"]
@@ -211,16 +237,16 @@ def register():
         jenis_kelamin=request.form.get('jenis_kelamin')
         if not User.query.filter_by(email=email).first():
 
-            user = User(nama=nama, email=email, alamat=alamat, sekolah=nama_sekolah,
-                        jenis_kelamin=jenis_kelamin, kategori=kategori,
-                        kab_kota=kab_kota, provinsi=provinsi, password=password)
+            user = User(username=username, email=email, address=address, jenis_kelamin=jenis_kelamin, 
+            			 kategori_petani=kategori,
+                         password=password)
 
             db.session.add(user)
             db.session.commit()
-            return render_template("register_success.html", nama=nama, title="Registrasi Berhasil!")
+            return render_template("register_peneliti_success.html", username=username, title="Registrasi Berhasil!")
 
         else:
-            return render_template("register.html", msg="email sudah terdaftar")
+            return render_template("register_petani.html", msg="petani sudah terdaftar")
 
     return render_template("register.html", title="Registrasi")
 
