@@ -8,13 +8,41 @@ app=Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///agreed.db'
 app.config['SECRET_KEY']='thisissupposedtobesecret'
 
+login_manager=LoginManager()
+login_manager.init_app(app)
+#login_manager.login_view='login_peneliti'
+#login_manager.login_view='login_petani'
+login_manager.login_view='login_peneliti'
+
 db=SQLAlchemy(app)
 
-class Admin(db.Mode):
+@login_manager.user_loader
+def load_user(self_id):
+	return Peneliti.query.get(self_id)
+
+@login_manager.user_loader
+def load_user_petani(self_id):
+	return Petani.query.get(self_id)
+
+@login_manager.user_loader
+def load_user_admin(self_id):
+	return Admin.query.get(self_id)
+
+
+class Admin(db.Model):
 	__tablename__="admin"
 	id=db.Column(db.Integer, primary_key=True)
 	admin=db.Column(db.String(10))
 	password=db.Column(db.String(10))
+
+	def __init__ (self, admin=admin, password=password):
+		self.admin=admin
+		self.password=password
+
+	def generate_password(self, password):
+		self.password=generate_password_hash(password)
+	def check_password(self):
+		return self.password
 
 class Peneliti(db.Model):
 	__tablename__="peneliti"
@@ -29,46 +57,35 @@ class Peneliti(db.Model):
 	def __init__(self, username, email, password, universitas,
                  jenis_kelamin, kategori_penelitian):
 
-        self.username = username
-        self.set_password(password)
-        self.email = email
-        self.universitas=universitas
-        self.kategori_penelitian=kategori_penelitian
-        self.jenis_kelamin=jenis_kelamin
-        self.authenticated = False
-        self.confirmed = False
-   
-    def address(self, address):
-    	self.address=address
-    def 
+		self.username=username
+		self.generate_password(password)
+		self.email = email
+		self.universitas=universitas
+		self.kategori_penelitian=kategori_penelitian
+		self.jenis_kelamin=jenis_kelamin
+		self.authenticated = False
+		self.confirmed = False
 
-
-    def is_authenticated(self):
-        return True
-
-    def is_anonymous(self):
-        return True
-
-    def check_password(self, password):
-        return check_password(self.password, password)
-
-    def is_confirmed(self):
-        return self.confirmed
-
-    def confirm_user(self):
-        self.confirmed = True
-
-    def get_id(self):
-        return str(self.user_id)
-
-    def generate_password(self , password):
-        self.password = generate_password_hash(password, methods='sha256')
-
-    def check_password(self , password):
-        return check_password_hash(self.password , password)
-
-    def __repr__(self):
-        return "<User %r>"% (self.nama)
+	def address(self, address):
+		self.address=address
+	def is_authenticated(self):
+		return True
+	def is_anonymous(self):
+	    return True
+	def check_password(self, password):
+	    return check_password(self.password, password)
+	def is_confirmed(self):
+	    return self.confirmed
+	def confirm_user(self):
+	    self.confirmed = True
+	def get_id(self):
+	    return str(self.user_id)
+	def generate_password(self , password):
+	    self.password = generate_password_hash(password, methods='sha256')
+	def check_password(self , password):
+	    return check_password_hash(self.password , password)
+	def __repr__(self):
+	    return "<User %r>"% (self.nama)
 
 
 class Petani(db.Model):
@@ -83,42 +100,32 @@ class Petani(db.Model):
 
 	def __init__(self, username, email, password, Address,
                  jenis_kelamin, kategori_petani):
-
-        self.username = username
-        self.set_password(password)
-        self.email = email
-        self.Address=Address
-        self.kategori_petani=kategori_petani
-        self.jenis_kelamin=jenis_kelamin
-        self.authenticated = False
-        self.confirmed = False
-   
-    def is_authenticated(self):
-        return True
-
-    def is_anonymous(self):
-        return True
-
-    def check_password(self, password):
-        return check_password(self.password, password)
-
-    def is_confirmed(self):
-        return self.confirmed
-
-    def confirm_user(self):
-        self.confirmed = True
-
-    def get_id(self):
-        return str(self.user_id)
-
-    def generate_password(self , password):
-        self.password = generate_password_hash(password)
-
-    def check_password(self , password):
-        return check_password_hash(self.password , password)
-
-    def __repr__(self):
-        return "<User %r>"% (self.nama)
+		self.username = username
+		self.generate_password(password)
+		self.email = email
+		self.Address=Address
+		self.kategori_petani=kategori_petani
+		self.jenis_kelamin=jenis_kelamin
+		self.authenticated = False
+		self.confirmed = False
+	def is_authenticated(self):
+	    return True
+	def is_anonymous(self):
+	    return True
+	def check_password(self, password):
+	    return check_password(self.password, password)
+	def is_confirmed(self):
+	    return self.confirmed
+	def confirm_user(self):
+	    self.confirmed = True
+	def get_id(self):
+	    return str(self.user_id)
+	def generate_password(self , password):
+	    self.password = generate_password_hash(password)
+	def check_password(self , password):
+	    return check_password_hash(self.password , password)
+	def __repr__(self):
+	    return "<User %r>"% (self.nama)
 
 class Upload_data(db.Model):
 	__upload_data__="upload_data"
@@ -129,15 +136,23 @@ class Upload_data(db.Model):
 ###################### Admin Area, Don't Disturbe. so many secret things a ################
 ###########################################################################################
 
-@app.route("/login/admin")
-login_required(admin)
+@app.route("/login/admin", methods=['GET', 'POST'])
 def login_admin():
-	return render_template ('login_admin.html', admin=admin)
+	if request.form=="POST":
+		admin=request.form['admin']
+		password=request.form['password']
+		user=admin.query.filter_by(admin=admin).first()
+		if user and user.check_password(password):
+			return redirect (url_for('dashboard_admin'))
 
 
+	return render_template ('login_admin.html')
 
 
-
+@app.route('/dashboard_admin')
+@login_required
+def dashboard_admin():
+	return render_template ('dashboar_admin.html')
 
 #############################################################################
 ################### Peneliti dan Tani Area ##################################
@@ -149,42 +164,46 @@ def login_admin():
 
 
 @app.route("/login/peneliti", methods=["GET","POST"])
-login_required(peneliti)
-def login():
-    if request.method="POST":
+#@login_required
+def login_peneliti():
+    if request.method=="POST":
     	email=request.form["username"]
     	password=request.form["password"]
-    	user=peneliti.query.filter_by(email=email).first()
+    	user=peneliti.query.filter_by(username=username).first()
     	if user and user.check_password(password):
+    		load_user_peneliti(user)
     		return redirect(url_for("page_market_place"))
-    return render_template("login_peneliti.html", title="Peneliti Login")
+    return render_template("login.html", title="Peneliti Login")
 
 
 @app.route("/login/petani", methods=["GET","POST"])
-login_required(petani)
-def login():
-    if request.method="POST":
+#@login_required
+def login_petani():
+    if request.method=="POST":
     	email=request.form["username"]
     	password=request.form["password"]
     	address=request.form['address']
     	jenis_petani=request.form['jenis_petani']	
-    	user=petani.query.filter_by(email=email).first()
+    	user=petani.query.filter_by(username=username).first()
     	if user and petani.check_password(password):
+    		load_user_petani(user)
     		return redirect(url_for("dashboard_login_petani"))
-    return render_template("login_petani.html", title="Petani Login")
+    return render_template("login.html", title="Petani Login")
 
 
 
-############## Dashboard Petani #######################
+############## Dashboard Petani dan Peneliti #######################
 
 @app.route('/dashboard_login_petani')
+@login_required
 def dashboard_login_petani():
-	if current_user.role='user':
+	if current_user.role=='petani':
 		return render_template('dashboard_login_petani.html', controller='controller for petani')
 
 @app.route('/page_market_place')
+@login_required
 def page_market_place():
-	if current_user.role='user':
+	if current_user.role=='peneliti':
 		return render_template ('page_market_place.html')
 
 
@@ -193,7 +212,7 @@ def page_market_place():
 ################################# Register Area ##################################
 
 
-################################# REGISTER PENELITI ###############################
+			############# REGISTER PENELITI ####################
 
 @app.route("/register/peneliti", methods=["GET", "POST"])
 def register_peneliti():
@@ -205,7 +224,7 @@ def register_peneliti():
         universitas=request.form["universitas"]
         kategori_penelitian=request.form['kategori_penelitian']
         jenis_kelamin = request.form.get("jenis_kelamin")
-        if not Penelti.query.filter_by(email=email).first():
+        if not Peneliti.query.filter_by(email=email).first():
 
             user = Peneliti(nama=nama, email=email, kategori_penelitian=kategori_penelitian, 
             			universitas=universitas,
@@ -219,11 +238,11 @@ def register_peneliti():
         else:
             return render_template("register_peneliti.html", msg="petani sudah terdaftar")
 
-    return render_template("register.html", title="Registrasi")
+    return render_template("register_agri.html", title="Registrasi")
 
 
 
-######################	REGISTRAI PETANI 		############################################### 
+			#################	REGISTRAI PETANI 	######################### 
 
 @app.route("/register/petani", methods=["GET", "POST"])
 def register_petani():
@@ -248,7 +267,7 @@ def register_petani():
         else:
             return render_template("register_petani.html", msg="petani sudah terdaftar")
 
-    return render_template("register.html", title="Registrasi")
+    return render_template("register_agri.html", title="Registrasi")
 
 if __name__ == '__main__':
 	app.run(debug=True)
