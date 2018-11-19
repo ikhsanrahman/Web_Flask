@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Agrooo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap -->
+    <link href="/static/css/vendor/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Flat UI-->
+    <link href="/static/css/flat-ui.css" rel="stylesheet">
+    <nav class="navbar navbar-default navbar-lg navbar-expand-lg" role="navigation">
+  <a class="navbar-brand" href="/">Agrooo</a>
+  <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse-01"></button>
+  <div class="collapse navbar-collapse" id="navbar-collapse-01">
+
+   
+    <!-- Default Navbar Button -->
+    <ul class="nav navbar-nav mr-auto navbar-right">
+      <li><a href="/login">Masuk</a></li>
+      <li><a href="/register">Daftar</a></li>
+      <li><a href="/tentang">Tentang</a></li>
+    </ul>
+    
+
+  </div><!-- /.navbar-collapse -->
+</nav><!-- /navbar -->
+<style type="text/css">
+  body, wrapper {
+   min-height:100vh;
+}
+</style>
+  </head>
+  <body>
+    {%block body%}
+
+    {%endblock%}
+    <footer class="container-fluid w-100 bg-gray text-dark py-5">
+      <div class="container">
+        <div class="col-lg-6">
+          <h3 class="footer-title">Tentang Agrooo</h3>
+          <p>Agrooo adalah platform marketplace untuk <strong>data</strong> pertanian</p>
+        </div>
+      </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/popper.js@1.14.1/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="http://vjs.zencdn.net/6.6.3/video.js"></script>
+    <script src="/static/scripts/flat-ui.js"></script>
+  </body>
+</html>
