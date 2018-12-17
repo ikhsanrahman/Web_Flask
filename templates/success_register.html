@@ -1,0 +1,12 @@
+{%extends "base2.html"%}
+
+{%block body%}
+
+	there are many image which has been uploaded as in home page
+	{%for user in user%}
+ 			{{user.id}}
+ 			{{user.first_name}}
+ 			{{user.email}}
+
+ 	{%endfor%}
+{%endblock%}

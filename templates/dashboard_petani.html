@@ -1,0 +1,56 @@
+{%extends 'base3.html'%}
+
+{%block body%}
+
+<div class="container">
+	<div class="row">
+	  <div class="col-md-6">
+	  <form class="form-horizontal" role="form" method="post" action="/register">
+	  	<div class="form-group">
+              <label for="inputEmail1" class="col-lg-4 control-label">Title</label>
+              <div class="col-lg-10">
+                <input type="text" class="form-control"  name="title" placeholder="judul">
+              </div>
+            </div>
+
+        <div class="form-group">
+              <label for="inputEmail1" class="col-lg-4 control-label">Price</label>
+              <div class="col-lg-10">
+                <input type="text" class="form-control"  name="price" placeholder="harga">
+              </div>
+            </div>
+
+        <div class="form-group">
+              <label for="inputEmail1" class="col-lg-4 control-label">Nama Gambar</label>
+              <div class="col-lg-10">
+                <input type="text" class="form-control"  name="nama_gambar" placeholder="Nama Gambar">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="inputEmail1" class="col-lg-4 control-label">Deskripsi</label>
+              <div class="col-lg-10">
+                <input type="text" class="form-control"  name="description" placeholder="Deskripsi">
+              </div>
+            </div>
+
+
+
+
+
+
+
+	      <form method="post" action="#" id="#">
+           <div class="form-group files">
+                <label>Upload Your File </label>
+                <input type="file" class="form-control" multiple="">
+              </div>
+          </form>
+          
+          <button value="submit">Submit</button>
+         </form>
+      </div>
+  </div>
+</div>
+              
+{%endblock%}

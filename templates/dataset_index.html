@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+
+  <head>
+    <meta charset="utf-8">
+    <title>Agrooo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap -->
+    <link href="/static/css/vendor/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Flat UI-->
+    <link href="/static/css/flat-ui.css" rel="stylesheet">
+    <nav class="navbar navbar-default navbar-lg navbar-expand-lg" role="navigation">
+  <a class="navbar-brand" href="/">Agrooo</a>
+  <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse-01"></button>
+  <div class="collapse navbar-collapse" id="navbar-collapse-01">
+
+   
+    <!-- Default Navbar Button -->
+    <ul class="nav navbar-nav mr-auto navbar-right">
+       <!-- arahkan ke pengumpulan data yang dibeli-->
+      <li><a href="/edit_kebun">Edit Kebun</a></li> <!-- arahkan ke upload image-->
+      <li><a href="/merchand/{{merchand.id}}/datasets">Tambah Dataset</a></li>  <!-- arahkan ke whatsapp dulu-->   
+      <li><a href="/logout">logout</a></li> 
+    </ul>
+    
+
+  </div><!-- /.navbar-collapse -->
+</nav><!-- /navbar -->
+<style type="text/css">
+  body, wrapper {
+   min-height:100vh;
+}
+</style>
+
+  </head>
+  <body>
+
+    <h1> Anda Belum Punya dataset toko anda, silahkan isi segera toko anda dengan di link yang sudah disediakan atau klik</h1> <a href="/merchand/{{merchand_id=merchand.id}}>/datasets/new">tambah dataset</a>
+
+
+   {%for dataset in merchand.dataset%}
+   <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+      <div class="col-sm-6 col-md-4">
+        <div class="thumbnail" >
+          <h4 class="text-center"><span class="label label-info"><a href="/show_dataset/">{{dataset.title}}</a></span></h4>
+          {%if img.gambar_toko%}
+          <img src="{{url_for('uploaded_file', filename=img.gambar_toko)}}" class="img-responsive">
+          {%endif%}
+          <div class="caption">
+            <div class="row">
+              <div class="col-md-6 col-xs-6">
+                <h3>{{dataset.title}}</h3>
+              </div>
+              <div class="col-md-6 col-xs-6 price">
+                <h3>
+                <label>{{dataset.price}}</label></h3>
+              </div>
+            </div>
+            <p>{{dataset.description}}</p>
+            <div class="row">
+            
+
+
+              <div class="col-md-6">
+                <a href="#" class="btn btn-success btn-product"><span class="glyphicon glyphicon-shopping-cart"></span> Edit</a></div>
+            </div>
+            <div class="col-md-6">
+                <a href="#" class="btn btn-success btn-product"><span class="glyphicon glyphicon-shopping-cart"></span> Delete</a></div>
+            </div>
+
+            <p> </p>
+          </div>
+        </div>
+      </div>
+      
+            
+        </div> 
+
+  </div>
+ 
+</div>
+   	{%endfor%}
+    
+
+
+    <footer class="container-fluid w-100 bg-gray text-dark py-5">
+      <div class="container">
+        <div class="col-lg-6">
+          <h3 class="footer-title">Tentang Agrooo</h3>
+          <p>Agrooo adalah platform marketplace untuk <strong>data</strong> pertanian</p>
+        </div>
+      </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/popper.js@1.14.1/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="http://vjs.zencdn.net/6.6.3/video.js"></script>
+    <script src="/static/scripts/flat-ui.js"></script>
+  </body>
+</html>

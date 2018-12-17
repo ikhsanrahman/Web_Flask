@@ -2,6 +2,8 @@
 <html lang="en">
 
 
+
+
   <head>
     <meta charset="utf-8">
     <title>Agrooo</title>
@@ -20,9 +22,10 @@
    
     <!-- Default Navbar Button -->
     <ul class="nav navbar-nav mr-auto navbar-right">
-      <li><a href="/login">Masuk</a></li>
-      <li><a href="/register">Daftar</a></li>
-      <li><a href="/tentang">Tentang</a></li>
+      <li><a href="/keranjang">Keranjang</a></li> <!-- arahkan ke pengumpulan data yang dibeli-->
+      <li><a href="{{url_for ("register_merchand", id=current_user.id)}}">Buat Kebun</a></li> <!-- arahkan ke upload image-->
+      <li><a href="/pembayaran">Pembayaran</a></li>  <!-- arahkan ke whatsapp dulu-->   
+      <li><a href="/logout">logout</a></li> 
     </ul>
     
 
