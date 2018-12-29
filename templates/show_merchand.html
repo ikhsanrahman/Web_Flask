@@ -49,8 +49,8 @@
       <div class="col-sm-6 col-md-4">
         <div class="thumbnail" >
           <h4 class="text-center"><span class="label label-info"><a href="/show_dataset/">{{merchand.nama_merchand}}</a></span></h4>
-          {%if img.gambar_toko%}
-          <img src="{{url_for('uploaded_file', filename=img.gambar_toko)}}" class="img-responsive">
+          {%if merchand.nama_gambar_toko%}
+          <img src="static/{{merchand.nama_gambar_toko}} class="img-responsive">
           {%endif%}
           <div class="caption">
             <div class="row">
